@@ -1,28 +1,29 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-class DisjointSet{
+class UnionFind{
 	int n;
 	vector<int> parent;
 	vector<int> rank;
 	vector<int> size;
 public:
-	DisjointSet(int n){
+	UnionFind(int n){
 		this->n = n;
 		parent.resize(n+1, 0);
 		rank.resize(n+1, 0);
 		size.resize(n+1, 1);
 		for(int i = 0; i < n+1; i++) parent[i] = i;
 	}
-	int findLeader(int x){
+	int find(int x){
 		if(parent[x] == x)
 			return x;
 		
-		return parent[x] = findLeader(parent[x]);
+		return parent[x] = find(parent[x]);
 	}
+
 	void unionByRank(int a, int b){
-		int a_leader = findLeader(a);
-		int b_leader = findLeader(b);
+		int a_leader = find(a);
+		int b_leader = find(b);
 		if(a_leader == b_leader)
 			return ;
 		if(rank[a_leader] > rank[b_leader]){
@@ -38,11 +39,12 @@ public:
 	}
 
 	void unionBySize(int a, int b){
-		int a_leader = findLeader(a);
-		int b_leader = findLeader(b);
+		int a_leader = find(a);
+		int b_leader = find(b);
 
 		if(a_leader == b_leader)
 			return ;
+		
 		if(size[a_leader] > size[b_leader]){
 			parent[b_leader] = a_leader;
 			size[a_leader] += size[b_leader];
